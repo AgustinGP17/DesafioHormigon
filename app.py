@@ -11,87 +11,90 @@ st.set_page_config(
     layout="wide",
 )
 
-# --- ESTILO PERSONALIZADO (CSS MEJORADO PARA LEGIBILIDAD) ---
+# --- CORRECCIÓN DE COLORES E INVISIBILIDAD (CSS) ---
 st.markdown("""
     <style>
-    /* Fondo general de la app */
-    .main { background-color: #f0f2f6; }
-    
-    /* Estilo de las métricas (los números grandes) */
-    div[data-testid="stMetric"] {
-        background-color: #ffffff;
-        border: 2px solid #dfe3e8;
-        padding: 20px;
-        border-radius: 15px;
-        box-shadow: 2px 2px 10px rgba(0,0,0,0.05);
-    }
-    
-    /* Color de los números (Valor de la métrica) */
-    div[data-testid="stMetricValue"] > div {
-        color: #1f2937 !important; /* Gris muy oscuro, casi negro */
-        font-weight: 800;
-    }
-    
-    /* Color de las etiquetas de las métricas */
-    div[data-testid="stMetricLabel"] > div {
-        color: #4b5563 !important; /* Gris medio */
+    /* 1. ARREGLAR LETRAS INVISIBLES EN EL SIDEBAR (PANEL IZQUIERDO) */
+    [data-testid="stSidebar"] label {
+        color: #FFFFFF !important; /* Forzamos blanco para que se vea en el fondo oscuro */
+        font-weight: bold;
         font-size: 1rem;
-        font-weight: 600;
+        text-shadow: 1px 1px 2px rgba(0,0,0,0.5); /* Sombra para máxima legibilidad */
+    }
+    
+    /* 2. ARREGLAR LETRAS EN EL CUERPO PRINCIPAL */
+    .main label {
+        color: #1f2937 !important; /* Gris muy oscuro para el fondo claro */
     }
 
-    /* Estilo de los sliders y controles */
-    .stSlider label, .stNumberInput label {
-        color: #1f2937 !important;
-        font-weight: bold;
+    /* 3. ESTILO DE LAS TARJETAS DE NÚMEROS (METRICS) */
+    div[data-testid="stMetric"] {
+        background-color: #ffffff;
+        border: 2px solid #3b82f6; /* Borde azul para que resalte */
+        padding: 15px;
+        border-radius: 12px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+    
+    div[data-testid="stMetricValue"] > div {
+        color: #111827 !important; /* Negro intenso para los números */
+        font-size: 2rem !important;
+    }
+    
+    div[data-testid="stMetricLabel"] > div {
+        color: #374151 !important; /* Gris oscuro para el título del número */
+        font-weight: bold !important;
+    }
+
+    /* Estilo para los expanders del sidebar */
+    .streamlit-expanderHeader {
+        color: white !important;
+        background-color: rgba(255,255,255,0.1);
+        border-radius: 5px;
     }
     </style>
     """, unsafe_allow_html=True)
 
 # --- SIDEBAR: CONFIGURACIÓN DE MATERIALES ---
-st.sidebar.header("⚙️ 1. Propiedades de Materiales")
-st.sidebar.info("Ajusta densidades y costos aquí.")
+st.sidebar.markdown("## ⚙️ 1. Materiales")
 
-with st.sidebar.expander("Portland Cement"):
-    c_den = st.number_input("Densidad (C)", value=2.85, step=0.01)
-    c_cost = st.number_input("Costo USD/kg (C)", value=0.175, format="%.4f")
-    c_gwp = st.number_input("GWP KgCO2/kg (C)", value=0.90)
+with st.sidebar.expander("🧱 Portland Cement"):
+    c_den = st.number_input("Densidad (C)", value=2.85, step=0.01, key="c1")
+    c_cost = st.number_input("Costo USD/kg (C)", value=0.175, format="%.4f", key="c2")
+    c_gwp = st.number_input("GWP KgCO2/kg (C)", value=0.90, key="c3")
 
-with st.sidebar.expander("Limestone Powder"):
-    l_den = st.number_input("Densidad (L)", value=2.711, step=0.01)
-    l_cost = st.number_input("Costo USD/kg (L)", value=0.040, format="%.4f")
-    l_gwp = st.number_input("GWP KgCO2/kg (L)", value=0.06)
+with st.sidebar.expander("🪨 Limestone Powder"):
+    l_den = st.number_input("Densidad (L)", value=2.711, step=0.01, key="l1")
+    l_cost = st.number_input("Costo USD/kg (L)", value=0.040, format="%.4f", key="l2")
+    l_gwp = st.number_input("GWP KgCO2/kg (L)", value=0.06, key="l3")
 
-with st.sidebar.expander("Natural Sand"):
-    s_den = st.number_input("Densidad (S)", value=2.65, step=0.01)
-    s_cost = st.number_input("Costo USD/kg (S)", value=0.015, format="%.4f")
-    s_gwp = st.number_input("GWP KgCO2/kg (S)", value=0.01)
+with st.sidebar.expander("🏖️ Natural Sand"):
+    s_den = st.number_input("Densidad (S)", value=2.65, step=0.01, key="s1")
+    s_cost = st.number_input("Costo USD/kg (S)", value=0.015, format="%.4f", key="s2")
+    s_gwp = st.number_input("GWP KgCO2/kg (S)", value=0.01, key="s3")
 
-with st.sidebar.expander("Water"):
-    w_den = st.number_input("Densidad (W)", value=1.00, step=0.01)
-    w_cost = st.number_input("Costo USD/kg (W)", value=0.0025, format="%.4f")
-    w_gwp = st.number_input("GWP KgCO2/kg (W)", value=0.00)
+with st.sidebar.expander("💧 Water"):
+    w_den = st.number_input("Densidad (W)", value=1.00, step=0.01, key="w1")
+    w_cost = st.number_input("Costo USD/kg (W)", value=0.0025, format="%.4f", key="w2")
+    w_gwp = st.number_input("GWP KgCO2/kg (W)", value=0.00, key="w3")
 
-with st.sidebar.expander("Plastificante"):
-    p_den = st.number_input("Densidad (P)", value=1.11, step=0.01)
-    p_cost = st.number_input("Costo USD/ml (P)", value=3.75, format="%.2f")
-    p_gwp = st.number_input("GWP KgCO2/ml (P)", value=2.1)
-
-with st.sidebar.expander("Acelerante"):
-    a_den = st.number_input("Densidad (A)", value=1.25, step=0.01)
-    a_cost = st.number_input("Costo USD/ml (A)", value=1.95, format="%.2f")
-    a_gwp = st.number_input("GWP KgCO2/ml (A)", value=1.1)
+with st.sidebar.expander("🧪 Aditivos (P y A)"):
+    p_den = st.number_input("Densidad Plastificante", value=1.11, step=0.01)
+    p_cost = st.number_input("Costo USD/ml Plast.", value=3.75)
+    a_den = st.number_input("Densidad Acelerante", value=1.25, step=0.01)
+    a_cost = st.number_input("Costo USD/ml Acel.", value=1.95)
 
 materiales = {
     "Portland Cement": {"densidad": c_den, "costo": c_cost, "gwp": c_gwp},
     "Limestone Powder": {"densidad": l_den, "costo": l_cost, "gwp": l_gwp},
     "Natural Sand": {"densidad": s_den, "costo": s_cost, "gwp": s_gwp},
     "Water": {"densidad": w_den, "costo": w_cost, "gwp": w_gwp},
-    "Plastificante": {"densidad": p_den, "costo": p_cost, "gwp": p_gwp},
-    "Acelerante": {"densidad": a_den, "costo": a_cost, "gwp": a_gwp}
+    "Plastificante": {"densidad": p_den, "costo": p_cost, "gwp": 2.1},
+    "Acelerante": {"densidad": a_den, "costo": a_cost, "gwp": 1.1}
 }
 
 # --- SIDEBAR: VARIABLES DE LA MEZCLA ---
-st.sidebar.header("🧪 2. Parámetros de la Mezcla")
+st.sidebar.markdown("## 🧪 2. Parámetros de la Mezcla")
 S_val = st.sidebar.slider("S - Fracción de Arena", 0.60, 0.99, 0.70, 0.01)
 W_val = st.sidebar.slider("W - Relación Agua/Polvo", 0.00, 0.50, 0.25, 0.01)
 C_val = st.sidebar.slider("C - Fracción de Cemento", 0.50, 1.00, 0.50, 0.05)
@@ -104,13 +107,11 @@ def calcular_mezcla(S, W, C, V1, V2, ml_objetivo):
     M_arena_base = 1000 
     den_p, den_a = materiales["Plastificante"]["densidad"], materiales["Acelerante"]["densidad"]
     
-    # Masa Polvo inicial
     M_polvo_base = ((M_arena_base * (1 - S) / S) - (0.4 * (V1 * den_p + V2 * den_a))) / (1 + W)
     M_agua_base = M_polvo_base * W - 0.6 * (V1 * den_p + V2 * den_a)
     M_cemento_base = M_polvo_base * C
     M_CaCO3_base = M_polvo_base * (1 - C)
     
-    # Volumen Base
     V_total_base = ( (M_cemento_base / materiales["Portland Cement"]["densidad"]) + 
                      (M_CaCO3_base / materiales["Limestone Powder"]["densidad"]) + 
                      (M_arena_base / materiales["Natural Sand"]["densidad"]) + 
@@ -155,60 +156,49 @@ m_lab, m_m3, costo, co2, score = calcular_mezcla(S_val, W_val, C_val, V1_val, V2
 
 # --- INTERFAZ PRINCIPAL ---
 st.title("🏗️ Concrete Optimizer Pro")
-st.markdown("Los cálculos se actualizan automáticamente al cambiar los parámetros.")
+st.write("Ajusta los materiales y parámetros en el panel izquierdo.")
 
-# Métricas con nuevo estilo visual
+# Fila de métricas
 col1, col2, col3 = st.columns(3)
-col1.metric("🏆 Puntaje Total", f"{score:.2f} pts")
-col2.metric("💵 Costo por m³", f"${costo:.2f} USD")
-col3.metric("🌱 Huella de CO₂", f"{co2:.2f} kg/m³")
+col1.metric("🏆 Puntaje Total", f"{score:.2f}")
+col2.metric("💵 Costo (USD/m³)", f"${costo:.2f}")
+col3.metric("🌱 CO₂ (kg/m³)", f"{co2:.2f}")
 
 st.markdown("---")
 
-tab1, tab2, tab3 = st.tabs(["🧪 Muestra Lab", "📊 Análisis Industrial", "🗺️ Matriz S vs W"])
+# Pestañas
+t1, t2, t3 = st.tabs(["🔬 Receta Laboratorio", "📊 Escala Industrial", "🗺️ Mapa de Optimización"])
 
-with tab1:
-    st.subheader(f"Dosificación para {target_ml} ml")
+with t1:
+    st.subheader(f"Cantidades exactas para {target_ml} ml")
     df_lab = pd.DataFrame({
-        "Componente": ["Cemento", "Limestone (CaCO3)", "Arena", "Agua", "Aditivos (Masa)"],
-        "Peso (gramos)": [m_lab["Cemento"], m_lab["CaCO3"], m_lab["Arena"], m_lab["Agua"], m_lab["Aditivo_Masa"]]
+        "Componente": ["Cemento", "Limestone (CaCO3)", "Arena", "Agua", "Aditivos"],
+        "Gramos (g)": [m_lab["Cemento"], m_lab["CaCO3"], m_lab["Arena"], m_lab["Agua"], m_lab["Aditivo_Masa"]]
     })
-    st.dataframe(df_lab.style.format({"Peso (gramos)": "{:.2f}"}), use_container_width=True)
-    st.success(f"Utilizar: {V1_val} ml de Plastificante y {V2_val} ml de Acelerante.")
+    st.table(df_lab.style.format({"Gramos (g)": "{:.2f}"}))
+    st.info(f"💡 Medir {V1_val} ml de Plastificante y {V2_val} ml de Acelerante.")
 
-with tab2:
-    st.subheader("Análisis por Metro Cúbico")
-    c_left, c_right = st.columns(2)
-    
-    with c_left:
-        # Gráfico de barras de masas m3
-        df_plot = pd.DataFrame({
-            "Mat": ["Cem", "Lime", "Sand", "Water"],
-            "Kg": [m_m3["Cemento"], m_m3["CaCO3"], m_m3["Arena"], m_m3["Agua"]]
-        })
-        fig = px.bar(df_plot, x="Mat", y="Kg", text_auto='.0f', title="Masa por componente (Kg/m³)")
-        st.plotly_chart(fig, use_container_width=True)
-        
-    with c_right:
-        # Gráfico de torta
-        fig_pie = px.pie(df_plot, values='Kg', names='Mat', title="Distribución de la mezcla")
-        st.plotly_chart(fig_pie, use_container_width=True)
+with t2:
+    st.subheader("Masa total por cada metro cúbico (kg)")
+    df_m3 = pd.DataFrame({
+        "Material": ["Cemento", "CaCO3", "Arena", "Agua"],
+        "Masa (kg)": [m_m3["Cemento"], m_m3["CaCO3"], m_m3["Arena"], m_m3["Agua"]]
+    })
+    fig = px.bar(df_m3, x="Material", y="Masa (kg)", color="Material", text_auto='.1f')
+    st.plotly_chart(fig, use_container_width=True)
 
-with tab3:
-    st.subheader("Optimización de S y W")
-    # Generar matriz rápida
-    s_arr = np.linspace(0.60, 0.99, 20)
-    w_arr = np.linspace(0.00, 0.50, 20)
-    res = np.zeros((len(w_arr), len(s_arr)))
-    
+with t3:
+    st.subheader("Simulación S vs W")
+    # Reducción de matriz para velocidad
+    s_arr = np.linspace(0.60, 0.99, 15)
+    w_arr = np.linspace(0.00, 0.50, 15)
+    z = np.zeros((len(w_arr), len(s_arr)))
     for i, w in enumerate(w_arr):
         for j, s in enumerate(s_arr):
             _, _, _, _, p = calcular_mezcla(s, w, C_val, V1_val, V2_val, target_ml)
-            res[i, j] = p
-            
-    fig_h = go.Figure(data=go.Heatmap(z=res, x=s_arr, y=w_arr, colorscale='RdYlGn'))
-    fig_h.update_layout(xaxis_title="S (Arena)", yaxis_title="W (Agua/Polvo)", height=500)
+            z[i, j] = p
+    fig_h = go.Figure(data=go.Heatmap(z=z, x=s_arr, y=w_arr, colorscale='Viridis'))
+    fig_h.update_layout(xaxis_title="S (Arena)", yaxis_title="W (Agua/Polvo)")
     st.plotly_chart(fig_h, use_container_width=True)
 
-st.markdown("---")
-st.caption("Creado para equipos de ingeniería - Control de materiales y sostenibilidad.")
+st.caption("Version 2.1 - Arreglo de contraste visual para Modo Oscuro/Claro.")
